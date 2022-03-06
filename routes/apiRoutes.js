@@ -2,7 +2,7 @@ const fs = require('fs');
 const app = require('express').Router();
 const notes = require('../db/db.json')
 
-// --> /api/notes
+
 app.get('/notes', (req, res) =>{
     res.json(notes)
 })
@@ -19,7 +19,7 @@ app.post('/notes', (req, res) => {
 
     console.log(notes)
 
-   fs.writeFile('./db/db.json', JSON.stringify(notes, null, " "), (err, data) => {
+   fs.writeFile('./db/db.json', JSON.stringify(notes, null, ""), (err, data) => {
        if (err){
            console.log(err);
            res.status(500);
@@ -28,8 +28,16 @@ app.post('/notes', (req, res) => {
 
        res.json(receivedData)
    })
+})
 
+app.delete('/notes/:id', (req, res) => {
+    const {id} = req.params;
 
+    const notesIndex = notes.findIndex(p => p.id == id);
+
+    notes.splice(notesIndex, 1);
+
+    return res.send();
 })
 
 module.exports = app;
